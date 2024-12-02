@@ -4,7 +4,7 @@ import subprocess
 def start_jamming():
     try:
         # Włączanie jammingu Wi-Fi na kanale 10
-        command = "hackrf_transfer -t /dev/zero -f 2457000000 -s 20000000"
+        command = "hackrf_transfer -t /dev/urandom -f 2457000000 -s 20000000 -x 47 -p 1"
         subprocess.run(command, shell=True, check=True)
         output_label.config(text="Jamowanie Wi-Fi rozpoczęte na kanale 10!")
     except subprocess.CalledProcessError as e:
