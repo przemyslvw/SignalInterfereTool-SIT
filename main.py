@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import subprocess
+import threading
 
 # Lista kanałów Wi-Fi i odpowiadających im częstotliwości (w Hz)
 wifi_channels = {
@@ -18,6 +19,14 @@ wifi_channels = {
 
 # Lista aktywnych procesów HackRF
 running_processes = []
+
+# Funkcja do wyświetlania logów w czasie rzeczywistym
+def display_logs(process):
+    for line in iter(process.stdout.readline, b''):
+        line = line.decode('utf-8').strip()
+        print(line)  # Wyświetlaj w terminalu
+        output_label.config(text=line)  # Wyświetlaj w GUI
+    process.stdout.close()
 
 # Funkcja do rozpoczęcia jamowania
 def start_jamming(channel_name):
@@ -38,8 +47,11 @@ def start_jamming(channel_name):
 
     try:
         # Uruchomienie polecenia HackRF
-        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
         running_processes.append(process)
+
+        # Uruchomienie wątku do wyświetlania logów
+        threading.Thread(target=display_logs, args=(process,), daemon=True).start()
         output_label.config(text=f"Jamowanie Wi-Fi na {channel_name} (częstotliwość: {freq} Hz) rozpoczęte!")
     except FileNotFoundError:
         output_label.config(text="Błąd: hackrf_transfer nie został znaleziony!")
