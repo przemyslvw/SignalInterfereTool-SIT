@@ -22,11 +22,17 @@ running_processes = []
 
 # Funkcja do wyświetlania logów w czasie rzeczywistym
 def display_logs(process):
-    for line in iter(process.stdout.readline, b''):
-        line = line.decode('utf-8').strip()
-        print(line)  # Wyświetlaj w terminalu
-        output_label.config(text=line)  # Wyświetlaj w GUI
-    process.stdout.close()
+    try:
+        for line in iter(process.stdout.readline, ''):  # Odczyt linii jako str
+            if process.poll() is not None:  # Sprawdź, czy proces działa
+                break
+            line = line.strip()  # Usunięcie białych znaków
+            print(line)  # Wyświetlaj w terminalu
+            output_label.config(text=line)  # Wyświetlaj w GUI
+        process.stdout.close()
+    except Exception as e:
+        print(f"Błąd w logach: {e}")
+        output_label.config(text=f"Błąd w logach: {e}")
 
 # Funkcja do rozpoczęcia jamowania
 def start_jamming(channel_name):
@@ -64,7 +70,8 @@ def start_jamming(channel_name):
 def stop_jamming():
     if running_processes:
         for process in running_processes:
-            process.terminate()  # Zatrzymanie procesu HackRF
+            if process.poll() is None:  # Sprawdź, czy proces działa
+                process.terminate()  # Zatrzymaj proces
         running_processes.clear()
         output_label.config(text="Jamowanie zatrzymane.")
     else:
