@@ -1,0 +1,3 @@
+# requirements.txt
+PyQt5>=5.15.0  # Jeśli używasz PyQt
+matplotlib>=3.5.0  # Jeśli dodajesz wizualizację widma
