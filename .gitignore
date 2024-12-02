@@ -1,0 +1,31 @@
+# Pliki systemowe i IDE
+__pycache__/
+*.py[cod]
+*.swp
+*.swo
+*.DS_Store
+.vscode/
+.idea/
+*.log
+
+# Wirtualne środowiska
+venv/
+.env/
+
+# Pliki generowane
+*.bak
+*.tmp
+*.log
+*.out
+*.pid
+*.dat
+
+# Pliki i katalogi danych
+tools/*.iq        # Jeśli używasz surowych danych I/Q
+*.csv
+*.sqlite3
+
+# Inne
+*.zip
+*.tar.gz
+*.tgz
