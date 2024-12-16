@@ -99,3 +99,30 @@ output_label.pack(pady=10)
 
 # Start aplikacji
 root.mainloop()
+# Funkcja do rozpoczęcia wielokanałowego jamowania
+def start_multi_jamming(selected_channels):
+    for channel_name in selected_channels:
+        start_jamming(channel_name)
+
+# Funkcja do obsługi wyboru kanałów
+def select_channels():
+    selected_channels = []
+    for channel_name, var in channel_vars.items():
+        if var.get():
+            selected_channels.append(channel_name)
+    if selected_channels:
+        start_multi_jamming(selected_channels)
+    else:
+        output_label.config(text="Wybierz co najmniej jeden kanał do zakłócania.")
+
+# Tworzenie GUI dla wyboru wielu kanałów
+channel_vars = {}
+for channel_name in wifi_channels.keys():
+    var = tk.BooleanVar()
+    chk = tk.Checkbutton(button_frame, text=channel_name, variable=var)
+    chk.pack(side=tk.LEFT, padx=5)
+    channel_vars[channel_name] = var
+
+# Przycisk do rozpoczęcia wielokanałowego jamowania
+multi_jam_button = tk.Button(root, text="Rozpocznij Wielokanałowe Jamowanie", command=select_channels, width=25)
+multi_jam_button.pack(pady=10)
